@@ -23,6 +23,8 @@ publishTo := {
   }
 }
 
+version := sys.props.get("version").getOrElse("SNAPSHOT")
+
 scalafmtOnCompile := true
 
 publishMavenStyle := true
