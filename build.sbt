@@ -44,8 +44,8 @@ credentials += Credentials("Sonatype Nexus Repository Manager",
 )
 
 lazy val AkkaHttpVersion = "10.1.11"
-lazy val AkkaVersion     = "2.5.26"
-lazy val CirceVersion    = "0.12.3"
+lazy val AkkaVersion     = "2.6.5"
+lazy val CirceVersion    = "0.11.1"
 lazy val LogbackVersion  = "1.2.3"
 
 libraryDependencies ++= Seq(
@@ -63,10 +63,10 @@ libraryDependencies ++= Seq(
   "ch.qos.logback"              % "logback-core"             % LogbackVersion,
   "net.logstash.logback"        % "logstash-logback-encoder" % "5.2",
   // --- JSON (de)serialization ------------------------------------------------------------------------------------
-  "de.heikoseeberger"          %% "akka-http-circe"          % "1.21.0",
+  "de.heikoseeberger"          %% "akka-http-circe"          % "1.27.0",
   "io.circe"                   %% "circe-core"               % CirceVersion,
   "io.circe"                   %% "circe-generic"            % CirceVersion,
   "io.circe"                   %% "circe-parser"             % CirceVersion,
   // --- Testing ---------------------------------------------------------------------------------------------------
-  "org.scalatest"              %% "scalatest"                % "3.0.1" % Test,
+  "org.scalatest"              %% "scalatest"                % "3.0.3" % Test,
 )
