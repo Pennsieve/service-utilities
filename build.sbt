@@ -2,7 +2,7 @@ organization := "com.blackfynn"
 
 name := "service-utilities"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.11"
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
@@ -37,6 +37,12 @@ resolvers ++= Seq(
   Resolver.bintrayRepo("commercetools", "maven")
 )
 
+credentials += Credentials("Sonatype Nexus Repository Manager",
+  "nexus.pennsieve.cc",
+  sys.env("PENNSIEVE_NEXUS_USER"),
+  sys.env("PENNSIEVE_NEXUS_PW")
+)
+
 lazy val AkkaHttpVersion = "10.1.11"
 lazy val AkkaVersion     = "2.5.26"
 lazy val CirceVersion    = "0.12.3"
@@ -63,10 +69,4 @@ libraryDependencies ++= Seq(
   "io.circe"                   %% "circe-parser"             % CirceVersion,
   // --- Testing ---------------------------------------------------------------------------------------------------
   "org.scalatest"              %% "scalatest"                % "3.0.1" % Test,
-)
-
-credentials += Credentials("Sonatype Nexus Repository Manager",
-  "nexus.pennsieve.cc",
-  sys.env.getOrElse("BLACKFYNN_NEXUS_USER", "pennsieve-ci"),
-  sys.env.getOrElse("BLACKFYNN_NEXUS_PW", "")
 )
