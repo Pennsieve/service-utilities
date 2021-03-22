@@ -1,4 +1,4 @@
-organization := "com.blackfynn"
+organization := "com.pennsieve"
 
 name := "service-utilities"
 
@@ -31,8 +31,8 @@ publishMavenStyle := true
 publishArtifact in Test := true
 
 resolvers ++= Seq(
-  "Blackfynn Releases" at "https://nexus.pennsieve.cc/repository/maven-releases",
-  "Blackfynn Snapshots" at "https://nexus.pennsieve.cc/repository/maven-snapshots",
+  "Pennsieve Releases" at "https://nexus.pennsieve.cc/repository/maven-releases",
+  "Pennsieve Snapshots" at "https://nexus.pennsieve.cc/repository/maven-snapshots",
   "Flyway" at "https://flywaydb.org/repo",
   Resolver.bintrayRepo("commercetools", "maven")
 )

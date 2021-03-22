@@ -1,4 +1,4 @@
-package com.blackfynn.service.utilities
+package com.pennsieve.service.utilities
 
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.MigrationInfo

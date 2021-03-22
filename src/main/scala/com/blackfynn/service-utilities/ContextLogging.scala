@@ -1,4 +1,4 @@
-package com.blackfynn.service.utilities
+package com.pennsieve.service.utilities
 
 import akka.http.scaladsl.model.StatusCode
 import com.typesafe.scalalogging.{ CanLog, Logger, LoggerTakingImplicit }
@@ -27,12 +27,12 @@ import scala.reflect.runtime.universe._
                   <throwableClassName/>
                   <throwableRootCauseClassName/>
                   <stackTrace/>
-                  <mdc><fieldName>blackfynn</fieldName></mdc>
+                  <mdc><fieldName>pennsieve</fieldName></mdc>
               </providers>
           </encoder>
       </appender>
 
-      <logger name="com.blackfynn" level="DEBUG" />
+      <logger name="com.pennsieve" level="DEBUG" />
 
       <root level="INFO">
         <appender-ref ref="Console" />
