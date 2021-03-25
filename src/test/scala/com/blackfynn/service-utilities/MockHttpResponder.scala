@@ -1,7 +1,6 @@
 package com.pennsieve.service.utilities
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.{ Http => HttpClient }
 import akka.util.ByteString
