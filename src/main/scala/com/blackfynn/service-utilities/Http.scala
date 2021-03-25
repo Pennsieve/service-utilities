@@ -15,7 +15,7 @@ import akka.http.scaladsl.model.{
 }
 import akka.http.scaladsl.server.Directives.{ complete, onComplete }
 import akka.http.scaladsl.server.Route
-import akka.stream.{ ActorMaterializer, OverflowStrategy, QueueOfferResult }
+import akka.stream.{ OverflowStrategy, QueueOfferResult }
 import akka.stream.scaladsl._
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe._
@@ -34,7 +34,6 @@ case class RetryableException(message: String) extends Exception
 
 trait HttpResponder {
   implicit val system: ActorSystem
-  implicit val materializer: ActorMaterializer
   implicit val executionContext: ExecutionContext
 
   def responder: HttpResponder.Responder
@@ -49,8 +48,7 @@ object HttpResponder {
 class SingleHttpResponder(
   implicit
   val system: ActorSystem,
-  val executionContext: ExecutionContext,
-  val materializer: ActorMaterializer
+  val executionContext: ExecutionContext
 ) extends HttpResponder {
 
   override def responder = HttpClient().singleRequest(_)
@@ -73,8 +71,7 @@ class QueueHttpResponder(
   rateLimit: Int
 )(implicit
   val system: ActorSystem,
-  val executionContext: ExecutionContext,
-  val materializer: ActorMaterializer
+  val executionContext: ExecutionContext
 ) extends HttpResponder {
 
   lazy val queue = Source
@@ -121,8 +118,7 @@ object QueueHttpResponder {
     port: Option[Int] = None
   )(implicit
     system: ActorSystem,
-    executionContext: ExecutionContext,
-    materializer: ActorMaterializer
+    executionContext: ExecutionContext
   ): QueueHttpResponder = {
     val usePort = port.getOrElse(if (https) 443 else 80)
     lazy val connectionPool: HttpResponder.ConnectionPool[Promise[HttpResponse]] =
@@ -150,7 +146,7 @@ class Http(timeout: FiniteDuration) {
     response: HttpResponse
   )(implicit
     executionContext: ExecutionContext,
-    materializer: ActorMaterializer
+    system: ActorSystem
   ): Future[String] = {
     response.entity
       .toStrict(timeout)
@@ -170,7 +166,7 @@ class Http(timeout: FiniteDuration) {
     response: HttpResponse
   )(implicit
     executionContext: ExecutionContext,
-    materializer: ActorMaterializer
+    system: ActorSystem
   ): Future[T] = {
     getBody(response).flatMap { body: String =>
       parse(body) match {
@@ -199,8 +195,8 @@ class Http(timeout: FiniteDuration) {
     response: HttpResponse,
     error: (StatusCode, Json) => T
   )(implicit
-    executionContext: ExecutionContext,
-    materializer: ActorMaterializer
+    system: ActorSystem,
+    executionContext: ExecutionContext
   ): Future[U] =
     getBody(response)
       .flatMap(
@@ -222,7 +218,8 @@ class Http(timeout: FiniteDuration) {
     response: Future[HttpResponse]
   )(implicit
     http: HttpResponder,
-    executionContext: ExecutionContext
+    executionContext: ExecutionContext,
+    system: ActorSystem
   ): Future[HttpResponse] =
     response.flatMap { response =>
       response.status match {
