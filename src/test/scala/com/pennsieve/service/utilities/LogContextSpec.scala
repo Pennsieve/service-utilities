@@ -1,8 +1,9 @@
 package com.pennsieve.service.utilities
 
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class LogContextSpec extends WordSpec with Matchers {
+class LogContextSpec extends AnyWordSpec with Matchers {
 
   "A log context" should {
     "be able to derive all values" in {
