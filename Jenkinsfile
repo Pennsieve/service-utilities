@@ -16,20 +16,20 @@ node("executor") {
 
     stage("Build") {
         withCredentials([pennsieveNexusCreds]) {
-            sh "$sbt clean compile"
+            sh "$sbt clean +compile"
         }
     }
 
     stage("Test") {
         withCredentials([pennsieveNexusCreds]) {
-            sh "$sbt test"
+            sh "$sbt +test"
         }
     }
 
     if (env.BRANCH_NAME == "main") {
         stage("Publish") {
             withCredentials([pennsieveNexusCreds]) {
-                sh "$sbt publish"
+                sh "$sbt +publish"
             }
         }
     }

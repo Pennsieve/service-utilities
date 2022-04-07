@@ -2,16 +2,26 @@ organization := "com.pennsieve"
 
 name := "service-utilities"
 
-scalaVersion := "2.12.11"
+lazy val scala212 = "2.12.11"
+lazy val scala213 = "2.13.8"
+lazy val supportedScalaVersions = List(scala212, scala213)
+
+scalaVersion := scala212
+
+crossScalaVersions := supportedScalaVersions
 
 scalacOptions ++= Seq(
   "-language:postfixOps",
   "-language:implicitConversions",
-  "-Xmax-classfile-name","100",
   "-feature",
   "-deprecation",
-  "-Ypartial-unification"
 )
+
+scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, 12)) =>
+    Seq("-Xmax-classfile-name", "100", "-Ypartial-unification")
+  case _ => Nil
+})
 
 publishTo := {
   val nexus = "https://nexus.pennsieve.cc/repository"
@@ -28,7 +38,7 @@ version := sys.props.get("version").getOrElse("SNAPSHOT")
 scalafmtOnCompile := true
 
 publishMavenStyle := true
-publishArtifact in Test := true
+Test / publishArtifact := true
 
 resolvers ++= Seq(
   "Pennsieve Releases" at "https://nexus.pennsieve.cc/repository/maven-releases",
@@ -45,8 +55,20 @@ credentials += Credentials("Sonatype Nexus Repository Manager",
 
 lazy val AkkaHttpVersion = "10.1.11"
 lazy val AkkaVersion     = "2.6.5"
-lazy val CirceVersion    = "0.11.1"
+
+lazy val circeVersion    = SettingKey[String]("circeVersion")
+circeVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, 12)) => "0.11.1"
+  case _ => "0.14.1"
+})
+
 lazy val LogbackVersion  = "1.2.3"
+
+lazy val akkaHttpCirceVersion = SettingKey[String]("akkaHttpCirceVersion")
+akkaHttpCirceVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, 12)) => "1.27.0"
+  case _ => "1.39.2"
+})
 
 libraryDependencies ++= Seq(
   // --- DB --------------------------------------------------------------------------------------------------------
@@ -63,10 +85,10 @@ libraryDependencies ++= Seq(
   "ch.qos.logback"              % "logback-core"             % LogbackVersion,
   "net.logstash.logback"        % "logstash-logback-encoder" % "5.2",
   // --- JSON (de)serialization ------------------------------------------------------------------------------------
-  "de.heikoseeberger"          %% "akka-http-circe"          % "1.27.0",
-  "io.circe"                   %% "circe-core"               % CirceVersion,
-  "io.circe"                   %% "circe-generic"            % CirceVersion,
-  "io.circe"                   %% "circe-parser"             % CirceVersion,
+  "de.heikoseeberger"          %% "akka-http-circe"          % akkaHttpCirceVersion.value,
+  "io.circe"                   %% "circe-core"               % circeVersion.value,
+  "io.circe"                   %% "circe-generic"            % circeVersion.value,
+  "io.circe"                   %% "circe-parser"             % circeVersion.value,
   // --- Testing ---------------------------------------------------------------------------------------------------
-  "org.scalatest"              %% "scalatest"                % "3.0.3" % Test,
+  "org.scalatest"              %% "scalatest"                % "3.2.11" % Test,
 )

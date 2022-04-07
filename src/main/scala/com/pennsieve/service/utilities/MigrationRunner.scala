@@ -20,7 +20,7 @@ class MigrationRunner(
 
   def run(): (Int, Seq[MigrationInfo]) = {
     val count = migrator.migrate
-    val migrationInfo = migrator.info.applied.seq.takeRight(count)
+    val migrationInfo = migrator.info.applied.takeRight(count).toIndexedSeq
 
     (count, migrationInfo)
   }
